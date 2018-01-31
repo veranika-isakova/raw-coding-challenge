@@ -19,7 +19,7 @@ describe('GET /hello-to-admins-only', (done) => {
     req(app).get('/hello-to-admins-only')
       .send({})
       .expect(401)
-      .end(done)    
+      .end(done)
   })
 
   it('should deny access for the user John and return a 401 status code', (done) => {
@@ -40,7 +40,7 @@ describe('GET /hello-to-admins-only', (done) => {
   })
 })
 
-describe('GET /download-video', () => { 
+describe('GET /download-video', () => {
   // You can download the "Bunny" video here: https://s3.eu-central-1.amazonaws.com/flipbase-coding-challenge/bunny.mp4
   it('should start downloading the "Bunny" video and place it in the directory as /video/bunny.mp4', (done) => {
     let path = './videos/bunny.mp4'
@@ -58,7 +58,7 @@ describe('GET /download-video', () => {
 })
 
 describe('GET /transcode-video', () => {
-  it('should encode', () => {
+  it('should encode', (done) => {
     let path = './videos/transcoded_bunny.webm'
 
     // Add some cleaning up if the video is already there before we started downloading

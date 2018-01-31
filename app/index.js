@@ -1,11 +1,19 @@
 const http = require('http')
 const port = 3000
+const url = require('url');
+
 
 const requestHandler = (request, response) => {
   // We end our request here; please customise this to your own liking!
-  response.end('Hello Node.js Server!')
-}
+  response.setHeader('Content-Type', 'application/json');
+  const purl=url.parse(request.url,true);
 
+  if(purl.pathname=='/hello-world')
+  response.end(JSON.stringify({'hello': 'world'}));
+
+  else
+  response.end('Hello world!');
+}
 
 const server = http.createServer(requestHandler)
 
