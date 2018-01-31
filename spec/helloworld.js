@@ -24,18 +24,19 @@ describe('GET /hello-to-admins-only', (done) => {
 
   it('should deny access for the user John and return a 401 status code', (done) => {
     req(app).get('/hello-to-admins-only')
-      .send({username: John.username, password: John.username})
+      .send({username: John.username, password: John.password})
       .expect(401)
       .end(done)
   })
 
   it('should allow access for Karen and return a 200 status code, plus return JSON object with the `message` property and value `Hello Karen` ', (done) => {
     req(app).get('/hello-to-admins-only')
-      .send({username: Karen.username, password: Karen.username})
+      .send({username: Karen.username, password: Karen.password})
       .expect(200)
       .end((err, res) => {
         expect(res.body).to.have.property('message')
         expect(res.body.message).to.equal('Hello Karen')
+        done();
       })
   })
 })
