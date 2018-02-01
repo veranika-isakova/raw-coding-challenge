@@ -4,6 +4,7 @@ const url = require('url');
 const fs = require('fs');
 const mkdirp = require('mkdirp');
 const ffmpeg = require('fluent-ffmpeg');
+const command = ffmpeg();
 
 const download = function(url, dest, cb) {
   const file = fs.createWriteStream(dest);
@@ -49,6 +50,34 @@ const requestHandler = (request, response) => {
     download('http://s3.eu-central-1.amazonaws.com/flipbase-coding-challenge/bunny.mp4','./videos/bunny.mp4', () => {
       response.end();
     })
+  }
+  else if (purl.pathname=='/transcode-video') {
+  ffmpeg.setFfmpegPath(process.env.FFMPEG_PATH=`/Users/veranika_isakova/Downloads/ffmpeg-3.4.1`);
+  const command = ffmpeg('./videos/bunny.mp4');
+   ffmpeg('./videos/bunny.mp4')
+   .outputOptions([
+     '-acodec libvorbis',
+     '-vcodec libvpx-vp9',
+     '-quality realtime',
+     '-cpu-used 7',
+   ])
+   .output('./videos/transcoded_bunny.webm')
+   .on('start', function(commandLine) {
+     console.log('Spawned Ffmpeg with command: ' + commandLine);
+    })
+    .on('progress', function(progress) {
+      console.log(progress.timemark + ' seconds of the video are transcoded');
+    })
+    .on('error', (err) => {
+      console.error(err)
+    })
+
+  command.getAvailableEncoders(function(err, encoders) {
+  console.log('Available encoders:');
+  console.dir(encoders);
+  console.dir(err);
+  })
+  response.end('Hello Node.js Server!')
   }
   else
     response.end('Hello world!');
