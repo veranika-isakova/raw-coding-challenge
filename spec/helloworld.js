@@ -54,6 +54,7 @@ describe('GET /download-video', () => {
     req(app).get('/download-video').expect(200).end((err, res) => {
       const doesVideoExists = fs.existsSync(path);
       expect(doesVideoExists).to.equal(true);
+      done()
     })
   })
 })
@@ -66,9 +67,10 @@ describe('GET /transcode-video', () => {
     if (fs.existsSync(path))
       fs.unlinkSync(path)
 
-    req(app).get('transcode-video').expect(200).end((err, res) => {
+    req(app).get('/transcode-video').expect(200).end((err, res) => {
       const doesTranscodedVideoExists = fs.existsSync(path);
       expect(doesTranscodedVideoExists).to.equal(true);
+      done()
     })
   })
 })

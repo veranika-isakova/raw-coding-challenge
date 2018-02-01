@@ -3,6 +3,20 @@ const port = 3000
 const url = require('url');
 const fs = require('fs');
 const mkdirp = require('mkdirp');
+const ffmpeg = require('fluent-ffmpeg');
+
+const download = function(url, dest, cb) {
+  const file = fs.createWriteStream(dest);
+  const request = http.get(url, function(response) {
+    response.pipe(file);
+    file.on('finish', function() {
+      file.close(cb);  // close() is async, call cb after close completes.
+    });
+  }).on('error', function(err) { // Handle errors
+    fs.unlink(dest); // Delete the file async. (But we don't check the result)
+    if (cb) cb(err.message);
+  });
+};
 
 const requestHandler = (request, response) => {
   // We end our request here; please customise this to your own liking!
@@ -31,10 +45,15 @@ const requestHandler = (request, response) => {
         }
     });
   }
+  else if (purl.pathname=='/download-video') {
+    download('http://s3.eu-central-1.amazonaws.com/flipbase-coding-challenge/bunny.mp4','./videos/bunny.mp4', () => {
+      response.end();
+    })
+  }
   else
     response.end('Hello world!');
   }
-  
+
 const server = http.createServer(requestHandler)
 
 server.listen(port, (err) => {
